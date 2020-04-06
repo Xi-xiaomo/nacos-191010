@@ -1,0 +1,23 @@
+server:
+  port: 8090
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: nacos-consumer
+          uri: lb://nacos-consumer #LoadBalance  Ribbon 负载均衡 默认 轮询一台
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - RewritePath=/consumer/(?<segment>.*),/$\{segment}
+        - id: nacos-provider
+          uri: lb://nacos-provider #LoadBalance  Ribbon 负载均衡 默认 轮询一台
+          predicates:
+            - Path=/provider/**
+          filters:
+            - RewritePath=/provider/(?<segment>.*),/$\{segment}
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: gateway-demo
